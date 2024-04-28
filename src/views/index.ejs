@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Pinterest Clone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="css/main-app.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <% if ( !auth_check ) { %>
+      <div class="main-menu">
+        <ul>
+          <li><a href="/">Home</a></li>
+        </ul>
+
+        <a href="/auth/twitter" class="social-button">
+          Twitter
+        </a>
+      </div>
+    <% } else { %>
+      <% include auth_menu %>
+    <% } %>
+
+    <div align="center" class="container">
+    <% if ( userImages.length < 1 ) { %>
+      <h1 class="text-center">No images yet</h1>
+    <% } else {
+        userImages.forEach (function (imageInfo) { %>
+          <div class="item pinclone-image">
+            <img onerror='this.src="images/noimage.png"' src=<%= imageInfo.image %> />
+            <h2><%= imageInfo.description %></h2>
+            <p>@<%= imageInfo.user.screen_name %></p>
+            <% if ( auth_check ) { %>
+              <button class="like" data-image=<%= imageInfo.date %> data-user=<%= imageInfo.user.id_str %>>
+                Like <span><%= imageInfo.like %></span>
+              </button>
+            <% } %>
+          </div>
+    <%  });
+       } %>
+
+    </div>
+    <script>
+      $('.like').click (function () {
+        let $this = $(this);
+        $.getJSON ('/like/' + $this.data ('user') + '/' + $this.data ('image'),
+          function (data) {
+            if ( data.error ) {
+              console.warn (data.error);
+              return;
+            }
+
+            $this.children ().text (data.like);
+        });
+      });
+    </script>
+  </body>
+</html>

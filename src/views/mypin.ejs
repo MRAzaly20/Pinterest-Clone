@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>Pinterest Clone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="css/main-app.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <% include auth_menu %>
+
+    <div align="center" class="container">
+    <% if ( userImages.length < 1 ) { %>
+      <h1 class="text-center">No images yet</h1>
+    <% } else {
+        userImages.forEach (function (imageInfo) { %>
+          <div class="item pinclone-image">
+            <img onerror='this.src="images/noimage.png"' src=<%= imageInfo.image %> />
+            <h2><%= imageInfo.description %></h2>
+            <a href=<%= "/remove-image/" + imageInfo.date %>>Remove</a>
+            <button class="like no-hover">Like <span><%= imageInfo.like %></span></button>
+          </div>
+    <%  });
+       } %>
+    </div>
+  </body>
+</html>
